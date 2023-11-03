@@ -12,6 +12,9 @@
   </a>
 </div>
 
+![image](https://github.com/chenluda/SAM-Seg-VIS/assets/45784833/3d3a4b66-7ad2-437e-80e1-097c8f44d08b)
+
+
 ## References
 
 <b>Segment Anything in Medical Images</b> <br/>
@@ -111,3 +114,10 @@ python app.py
 ## 更新日志
 
 * 2023-11-03：上传项目。
+
+## 待办
+
+- [x] 单点，单框提示分割
+- [ ] 多点，多框，点框提示分割
+- [ ] 文本提示分割
+- [ ] 加入非交互型分割大模型
