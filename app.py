@@ -1,3 +1,4 @@
+# refer to：https://github.com/bowang-lab/MedSAM/blob/main/gui.py, thanks!
 # -*- coding: utf-8 -*-
 import sys
 import time
@@ -179,6 +180,7 @@ class Window(QWidget):
         self.start_point = None
         self.end_point = None
         self.start_pos = (None, None)
+        self.GT_np = None
 
         self.x = None
         self.y = None
@@ -866,7 +868,8 @@ class Window(QWidget):
 
             # Save the masks and images
             Image.fromarray(self.img_3c).save(os.path.join(dir_path, f"{self.image_name}.png"))
-            Image.fromarray(self.GT_np).save(os.path.join(dir_path, f"{self.image_name}_GT.png"))
+            if self.GT_np != None:
+                Image.fromarray(self.GT_np).save(os.path.join(dir_path, f"{self.image_name}_GT.png"))
             Image.fromarray(self.sam_mask * 255).save(os.path.join(dir_path, f"{self.image_name}_sam_mask.png"))
             Image.fromarray(self.medsam_mask * 255).save(os.path.join(dir_path, f"{self.image_name}_medsam_mask.png"))
             Image.fromarray(self.sammed_mask * 255).save(os.path.join(dir_path, f"{self.image_name}_sammed_mask.png"))
@@ -879,7 +882,8 @@ class Window(QWidget):
 
             # Save the masks and images
             Image.fromarray(self.img_3c).save(os.path.join(dir_path, f"{self.image_name}.png"))
-            Image.fromarray(self.GT_np).save(os.path.join(dir_path, f"{self.image_name}_GT.png"))
+            if self.GT_np != None:
+                Image.fromarray(self.GT_np).save(os.path.join(dir_path, f"{self.image_name}_GT.png"))
             Image.fromarray(self.sam_mask * 255).save(os.path.join(dir_path, f"{self.image_name}_sam_mask.png"))
             Image.fromarray(self.medsam_mask * 255).save(os.path.join(dir_path, f"{self.image_name}_medsam_mask.png"))
             Image.fromarray(self.sammed_mask * 255).save(os.path.join(dir_path, f"{self.image_name}_sammed_mask.png"))
