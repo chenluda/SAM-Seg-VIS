@@ -19,7 +19,14 @@
 PyQt5 5.15.10
 python 3.9
 ```
-运行代码
+
+1. 下载模型权重至 checkpoints 的对应文件夹中
+
++ `checkpoints/MedSAM/medsam_vit_b.pth`: https://drive.google.com/drive/folders/1ETWmi4AiniJeWOt6HAsYgTjYv_fkgzoN?usp=drive_link
++ `checkpoints/MedSAM/sam_vit_b_01ec64.pth`: https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth
++ `checkpoints/MedSAM/sam-med2d_b.pth`: https://drive.google.com/file/d/1ARiB5RkSsWmAB_8mqWnwDF8ZKTtFwsjl/view?usp=drive_link
+
+2. 运行代码
 ```
 python app.py
 ```
@@ -43,15 +50,15 @@ python app.py
 > 
 >    ├─ MedSAM
 > 
->    │ Download the [model checkpoint](https://drive.google.com/drive/folders/1ETWmi4AiniJeWOt6HAsYgTjYv_fkgzoN?usp=drive_link) and place it at here, as 'checkpoints/MedSAM/medsam_vit_b.pth'.
+>    │ medsam_vit_b.pth
 >
 >    ├─ SAM
 > 
->    │ Download the [model checkpoint](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth) and place it at here, as 'checkpoints/MedSAM/sam_vit_b_01ec64.pth'.
+>    │ sam_vit_b_01ec64.pth
 >
 >    ├─ SAMMed
 > 
->    │ Download the [model checkpoint](https://drive.google.com/file/d/1ARiB5RkSsWmAB_8mqWnwDF8ZKTtFwsjl/view?usp=drive_link) and place it at here, as 'checkpoints/MedSAM/sam-med2d_b.pth'.
+>    │ sam-med2d_b.pth
 > 
 > └─ results（分割结果放置地）
 >
