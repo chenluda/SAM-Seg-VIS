@@ -25,7 +25,7 @@ python app.py
 ```
 > **Note**
 > ```
-> └─ Models（SAM 系列模型**结构**放置地）
+> └─ Models（SAM 系列模型结构放置地）
 > 
 >    ├─ MedSAM（模型名称）
 > 
@@ -39,7 +39,7 @@ python app.py
 > 
 >    │ Copy from [SAMMed](https://github.com/OpenGVLab/SAM-Med2D/tree/main/segment_anything)
 > 
-> └─ checkpoints（SAM 系列模型**权重**放置地）
+> └─ checkpoints（SAM 系列模型权重放置地）
 > 
 >    ├─ MedSAM
 > 
@@ -55,7 +55,7 @@ python app.py
 > 
 > └─ results（分割结果放置地）
 >
->    ├─ example_bbox_84.0_58.0_127.0_100.0（图像名称+提示类型+坐标）
+>    ├─ example_bbox_84.0_58.0_127.0_100.0（图像名称 + 提示类型 + 坐标）
 > 
 >    │ example.png（原始图像）
 >
