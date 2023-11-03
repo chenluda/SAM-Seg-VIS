@@ -12,6 +12,29 @@
   </a>
 </div>
 
+## References
+
+<b>Segment Anything in Medical Images</b> <br/>
+Jun Ma<sup>1</sup>, Yuting He<sup>2</sup>, Feifei Li<sup>3</sup>, Lin Han<sup>4</sup>, Chenyu You<sup>5</sup>, Bo Wang<sup>6</sup><br/>
+<sup>1 </sup>Peter Munk Cardiac Centre, University Health Network; Department of Laboratory Medicine and Pathobiology, University of Toronto; Vector Institute, Toronto, Canada  <br/>
+<sup>2 </sup>the Department of Computer Science, Johns Hopkins University, USA<br/>
+<sup>3 </sup>the Department of Cell and Systems Biology, University of Toronto, Canada<br/>
+<sup>4 </sup>Tandon School of Engineering, New York University, USA<br/>
+<sup>5 </sup>the Department of Electrical Engineering, Yale University, USA<br/>
+<sup>6 </sup>Peter Munk Cardiac Centre, University Health Network; Department of Laboratory Medicine and Pathobiology and Department of Computer Science, University of Toronto; Vector Institute, Toronto, Canada<br/>
+[paper](https://arxiv.org/abs/2304.12306) | [code](https://github.com/bowang-lab/MedSAM)
+
+<b>Segment Anything</b> <br/>
+Alexander Kirillov, Eric Mintun, Nikhila Ravi, Hanzi Mao, Chloe Rolland, Laura Gustafson, Tete Xiao, Spencer Whitehead, Alexander C. Berg, Wan-Yen Lo, Piotr Dollar, Ross Girshick<br/>
+Meta AI Research, FAIR<br/>
+[paper](https://ai.facebook.com/research/publications/segment-anything/) | [code](https://github.com/facebookresearch/segment-anything)
+
+<b>SAM-Med2D</b> <br/>
+Junlong Cheng<sup>1,2</sup>, Jin Ye<sup>2</sup>, Zhongying Deng<sup>2</sup>, Jianpin Chen<sup>2</sup>, Tianbin Li<sup>2</sup>, Haoyu Wang<sup>2</sup>, Yanzhou Su<sup>2</sup>, Ziyan Huang<sup>2</sup>, Jilong Chen<sup>1</sup>, Lei Jiang<sup>1</sup>, Hui Sun<sup>2</sup>, Junjun He<sup>2</sup>, Shaoting Zhang<sup>2</sup>, Min Zhu<sup>1</sup>, Yu Qiao<sup>2</sup><br/>
+<sup>1 </sup>Sichuan University<br/>
+<sup>2 </sup>Shanghai AI Laboratory<br/>
+[paper](https://arxiv.org/abs/2308.16184) | [code](https://github.com/OpenGVLab/SAM-Med2D)
+
 
 ## 运行环境
 
