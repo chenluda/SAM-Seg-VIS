@@ -1,6 +1,6 @@
 <div align="center">
   <h2>SAM-Seg-VIS</h2>
-  <p>Segment Anthing 系列模型分割结果可视化工具</p>
+  <p>简易 Segment Anthing 系列模型分割结果可视化工具</p>
   <a href="#">
     <img alt="Python 3.9" src="https://img.shields.io/badge/python-3.9-blue.svg" />
   </a>
