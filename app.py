@@ -360,6 +360,7 @@ class Window(QWidget):
         Reset the state of the window
         """
         self.image_path = None
+        self.image_name = None
         self.bg_img = None
         self.img_3c = None
         self.display_img = None
@@ -389,6 +390,15 @@ class Window(QWidget):
         self.menu_list.clear()
         self.pos_coords.clear()
 
+        if self.result_view.scene():
+            self.result_view.scene().clear()
+
+        if self.seg_view_1.scene():
+            self.seg_view_1.scene().clear()
+
+        if self.seg_view_2.scene():
+            self.seg_view_2.scene().clear()
+
         self.with_gt_radio.setEnabled(False)
 
     def load_image(self):
@@ -414,6 +424,7 @@ class Window(QWidget):
         self.img_3c = img_3c
         self.display_img = img_3c.copy()
         self.image_path = file_path
+        self.image_name = os.path.basename(file_path).split(".")[0]
         pixmap = np2pixmap(self.img_3c)
 
         H, W, _ = self.img_3c.shape
@@ -425,7 +436,7 @@ class Window(QWidget):
         self.bg_img.setPos(0, 0)
         self.view.setScene(self.scene)
 
-        self.check_and_draw(file_path)
+        self.check_and_draw(self.image_name)
 
         self.scene.mousePressEvent = self.mouse_press
         self.scene.mouseMoveEvent = self.mouse_move
@@ -487,7 +498,7 @@ class Window(QWidget):
         else:
             self.bg_img.setPixmap(pixmap)
 
-    def check_and_draw(self, image_path):
+    def check_and_draw(self, image_name):
         """
         Check if the image has been annotated before and draw the annotations
         """
@@ -496,8 +507,8 @@ class Window(QWidget):
 
         with open(self.annotation_info_file, "r") as f:
             for line in f.readlines():
-                saved_image_path, coords_str, timestamp = line.strip().split("; ")
-                if saved_image_path == image_path:
+                saved_image_name, coords_str, timestamp = line.strip().split("; ")
+                if saved_image_name == image_name:
                     if len(eval(coords_str)) == 4:
                         xmin, ymin, xmax, ymax = eval(coords_str)
                         self.menu_list.addItem(f"({str(xmin)}, {str(ymin)}, {str(xmax)}, {str(ymax)}) at {timestamp}")
@@ -571,12 +582,12 @@ class Window(QWidget):
         if self.box_radio.isChecked():
             (xmin, ymin, xmax, ymax), mask_with_box = self.handle_box_release(ev)
             self.pos_coords.setText(f"({str(xmin)}, {str(ymin)}, {str(xmax)}, {str(ymax)})")
-            self.save_annotation_info(self.image_path, (xmin, ymin, xmax, ymax), timestamp)
+            self.save_annotation_info(self.image_name, (xmin, ymin, xmax, ymax), timestamp)
 
         elif self.point_radio.isChecked():
             (x, y), mask_with_box = self.handle_point_release(ev)
             self.pos_coords.setText(f"({str(x)}, {str(y)})")
-            self.save_annotation_info(self.image_path, (x, y), timestamp)
+            self.save_annotation_info(self.image_name, (x, y), timestamp)
 
         self.scene.removeItem(self.bg_img)
         self.bg_img = self.scene.addPixmap(np2pixmap(mask_with_box))
@@ -665,7 +676,7 @@ class Window(QWidget):
 
         self.result_view.setScene(result_scene)
 
-    def save_annotation_info(self, image_path, coords, timestamp):
+    def save_annotation_info(self, image_name, coords, timestamp):
         """
         Save the annotation info to the file
         """
@@ -676,7 +687,7 @@ class Window(QWidget):
             x, y = coords
             self.menu_list.addItem(f"({str(x)}, {str(y)}) at {timestamp}")
         with open(self.annotation_info_file, "a") as f:
-            f.write(f"{image_path}; {coords}; {timestamp}\n")
+            f.write(f"{image_name}; {coords}; {timestamp}\n")
 
     def image_preprocess(self, size):
         """
@@ -845,36 +856,33 @@ class Window(QWidget):
         """
         Save the masks to disk
         """
-        image_name = os.path.basename(self.image_path).split(".")[0]
-        # Create the results directory if it does not exist
         if not os.path.isdir("./results"):
             os.makedirs("./results")
 
         if self.x is not None and self.y is not None:
-            # Create a directory for point-based segmentation
-            dir_path = f"./results/{image_name}_point_{self.x}_{self.y}"
+            dir_path = f"./results/{self.image_name}_point_{self.x}_{self.y}"
             if not os.path.isdir(dir_path):
                 os.makedirs(dir_path)
 
             # Save the masks and images
-            Image.fromarray(self.img_3c).save(os.path.join(dir_path, f"{image_name}.png"))
-            Image.fromarray(self.GT_np).save(os.path.join(dir_path, f"{image_name}_GT.png"))
-            Image.fromarray(self.sam_mask * 255).save(os.path.join(dir_path, f"{image_name}_sam_mask.png"))
-            Image.fromarray(self.medsam_mask * 255).save(os.path.join(dir_path, f"{image_name}_medsam_mask.png"))
-            Image.fromarray(self.sammed_mask * 255).save(os.path.join(dir_path, f"{image_name}_sammed_mask.png"))
+            Image.fromarray(self.img_3c).save(os.path.join(dir_path, f"{self.image_name}.png"))
+            Image.fromarray(self.GT_np).save(os.path.join(dir_path, f"{self.image_name}_GT.png"))
+            Image.fromarray(self.sam_mask * 255).save(os.path.join(dir_path, f"{self.image_name}_sam_mask.png"))
+            Image.fromarray(self.medsam_mask * 255).save(os.path.join(dir_path, f"{self.image_name}_medsam_mask.png"))
+            Image.fromarray(self.sammed_mask * 255).save(os.path.join(dir_path, f"{self.image_name}_sammed_mask.png"))
 
         elif self.xmin is not None and self.ymin is not None and self.xmax is not None and self.ymax is not None:
             # Create a directory for bounding box-based segmentation
-            dir_path = f"./results/{image_name}_bbox_{self.xmin}_{self.ymin}_{self.xmax}_{self.ymax}"
+            dir_path = f"./results/{self.image_name}_bbox_{self.xmin}_{self.ymin}_{self.xmax}_{self.ymax}"
             if not os.path.isdir(dir_path):
                 os.makedirs(dir_path)
 
             # Save the masks and images
-            Image.fromarray(self.img_3c).save(os.path.join(dir_path, f"{image_name}.png"))
-            Image.fromarray(self.GT_np).save(os.path.join(dir_path, f"{image_name}_GT.png"))
-            Image.fromarray(self.sam_mask * 255).save(os.path.join(dir_path, f"{image_name}_sam_mask.png"))
-            Image.fromarray(self.medsam_mask * 255).save(os.path.join(dir_path, f"{image_name}_medsam_mask.png"))
-            Image.fromarray(self.sammed_mask * 255).save(os.path.join(dir_path, f"{image_name}_sammed_mask.png"))
+            Image.fromarray(self.img_3c).save(os.path.join(dir_path, f"{self.image_name}.png"))
+            Image.fromarray(self.GT_np).save(os.path.join(dir_path, f"{self.image_name}_GT.png"))
+            Image.fromarray(self.sam_mask * 255).save(os.path.join(dir_path, f"{self.image_name}_sam_mask.png"))
+            Image.fromarray(self.medsam_mask * 255).save(os.path.join(dir_path, f"{self.image_name}_medsam_mask.png"))
+            Image.fromarray(self.sammed_mask * 255).save(os.path.join(dir_path, f"{self.image_name}_sammed_mask.png"))
 
         QMessageBox.information(self, "Success", "Saved.")
 
