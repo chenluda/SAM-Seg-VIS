@@ -723,18 +723,23 @@ class Window(QWidget):
             point_or_box_scaled = box_np / np.array([W, H, W, H]) * embedding_size
             mask = sam_inference(model, embedding, point_or_box_scaled, None, np.array([1]), H, W)
 
-        self.display_segmentation_result(mask, H, W, color_index, layout_row, layout_col, label_text)
+        if self.GT_np is not None:
+            dice, iou = self.calculate_foreground_dice_and_iou(self.GT_np, mask)
+        else:
+            dice, iou = 0, 0
+
+        self.display_segmentation_result(mask, H, W, color_index, layout_row, layout_col, label_text, dice, iou)
 
         return mask
 
-    def display_segmentation_result(self, mask, H, W, color_index, row, col, label_text):
+    def display_segmentation_result(self, mask, H, W, color_index, row, col, label_text, dice, iou):
         """
         Display the segmentation result
         """
         fixedWidth = 300
         fixedHeight = 300
 
-        label = QLabel(label_text)
+        label = QLabel(f"{label_text}, Dice: {dice:.2f}, IoU: {iou:.2f}")
         self.result_display_layout.addWidget(label, row, col)
 
         mask_3c = np.repeat(mask[:, :, None], 3, axis=-1)
@@ -854,6 +859,25 @@ class Window(QWidget):
 
         self.save_button.setEnabled(True)
 
+    def calculate_foreground_dice_and_iou(self, label, pred):
+        """
+        calculate foreground dice and iou
+        """
+        label = np.asarray(label).astype(bool)
+        pred = np.asarray(pred).astype(bool)
+
+        intersection = np.logical_and(label, pred)
+
+        label_sum = label.sum()
+        pred_sum = pred.sum()
+
+        union = label_sum + pred_sum - intersection.sum()
+
+        dice = 2 * intersection.sum() / np.clip(label_sum + pred_sum, a_min=1, a_max=None)
+        iou = intersection.sum() / np.clip(union, a_min=1, a_max=None)
+
+        return dice, iou
+
     def save_masks(self):
         """
         Save the masks to disk
@@ -866,23 +890,20 @@ class Window(QWidget):
             if not os.path.isdir(dir_path):
                 os.makedirs(dir_path)
 
-            # Save the masks and images
             Image.fromarray(self.img_3c).save(os.path.join(dir_path, f"{self.image_name}.png"))
-            if self.GT_np != None:
+            if self.GT_np is not None:
                 Image.fromarray(self.GT_np).save(os.path.join(dir_path, f"{self.image_name}_GT.png"))
             Image.fromarray(self.sam_mask * 255).save(os.path.join(dir_path, f"{self.image_name}_sam_mask.png"))
             Image.fromarray(self.medsam_mask * 255).save(os.path.join(dir_path, f"{self.image_name}_medsam_mask.png"))
             Image.fromarray(self.sammed_mask * 255).save(os.path.join(dir_path, f"{self.image_name}_sammed_mask.png"))
 
         elif self.xmin is not None and self.ymin is not None and self.xmax is not None and self.ymax is not None:
-            # Create a directory for bounding box-based segmentation
             dir_path = f"./results/{self.image_name}_bbox_{self.xmin}_{self.ymin}_{self.xmax}_{self.ymax}"
             if not os.path.isdir(dir_path):
                 os.makedirs(dir_path)
 
-            # Save the masks and images
             Image.fromarray(self.img_3c).save(os.path.join(dir_path, f"{self.image_name}.png"))
-            if self.GT_np != None:
+            if self.GT_np is not None:
                 Image.fromarray(self.GT_np).save(os.path.join(dir_path, f"{self.image_name}_GT.png"))
             Image.fromarray(self.sam_mask * 255).save(os.path.join(dir_path, f"{self.image_name}_sam_mask.png"))
             Image.fromarray(self.medsam_mask * 255).save(os.path.join(dir_path, f"{self.image_name}_medsam_mask.png"))
